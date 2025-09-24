@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>VoxPrivacy</title>
+  <script src="./static/tailwind.js"></script>
+  <script src="./static/vue.global.js"></script>
+  <script src="./static/flowbite.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
+    @layer base {
+      a[href^="http"] {
+        @apply text-blue-500;
+      }
+
+      a:hover {
+        @apply text-blue-700 underline;
+      }
+
+      h1 {
+        @apply mb-6 text-3xl font-bold text-gray-900 text-center;
+      }
+
+      h2 {
+        @apply mb-3 pt-4 text-2xl font-bold tracking-tight text-gray-900;
+      }
+
+      h4 {
+        @apply mb-4 pt-12 text-3xl font-semibold text-gray-900;
+      }
+
+      h5 {
+        @apply mb-3 pt-4 text-2xl font-bold tracking-tight text-gray-900;
+      }
+
+      h6 {
+        @apply mb-3 pt-4 text-xl font-bold tracking-tight text-gray-900;
+      }
+
+      p {
+        @apply mb-4 font-normal text-gray-900 leading-relaxed;
+      }
+    }
+
+    @layer components {
+      .list-select {
+        @apply block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0;
+      }
+
+      .tooltip {
+        position: absolute;
+        text-align: center;
+        padding: 8px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0;
+        border-radius: 8px;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .text-p {
+        @apply mb-4 font-normal text-gray-900 leading-relaxed;
+      }
+
+      .text-abstract {
+        @apply mb-4 font-normal text-gray-900 leading-relaxed text-justify;
+      }
+
+      .author {
+        @apply font-medium mr-2 pb-1 text-gray-900 inline-block text-base;
+      }
+
+      .author a {
+          @apply text-gray-900;
+        }
+
+      .affiliation {
+        @apply font-medium mr-2 pb-1 text-gray-900 block text-base;
+      }
+    }
+  </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {}
+        }
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="app">
+
+    <nav class="bg-white fixed w-full z-20 top-0 start-0 border-gray-200 border-b border-gray-200"
+      style="font-weight: bold;">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3">
+        <button data-collapse-toggle="navbar-default" type="button"
+          class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          aria-controls="navbar-default" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M1 1h15M1 7h15M1 13h15" />
+          </svg>
+        </button>
+
+        <div class="hidden w-full md:block md:w-auto ml-auto" id="navbar-default">
+          <ul
+            class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white">
+            <li>
+              <a href="#home" class="list-select"><b>Home</b></a>
+            </li>
+            <li>
+              <a href="#data" class="list-select"><b>VoxPrivacy-Task</b></a>
+            </li>
+            <li>
+              <a href="#eval" class="list-select"><b>VoxPrivacy-Data</b></a>
+            </li>
+            <li>
+              <a href="#model" class="list-select"><b>VoxPrivacy-Model</b></a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="p-4 mt-24 max-w-screen-xl mx-auto" id="home">
+      <div class="mt-16 mb-8">
+        <h1>VoxPrivacy: A Benchmark for Evaluating Interactional Privacy of Speech Language Models</h1>
+      </div>
+
+      <div class="max-w-screen-xl mx-auto mt-8 mb-16">
+        <div class="text-center h-2 flex flex-col gap-3">
+        </div>
+
+        <div class="max-w-[900px] mx-auto mt-8 mb-16">
+          <h2 class="text-center">Abstract</h2>
+          <p class="text-abstract">
+            As Speech Language Models (SLMs) transition from personal devices to shared, multi-user environments such as smart homes, a new challenge emerges: the model is expected to distinguish between users to manage information flow appropriately. Without this capability, an SLM could reveal one user's confidential schedule to another—a privacy failure we term <strong>interactional privacy</strong>. Thus, the ability to generate speaker-aware responses becomes essential for SLM safe deployment. Current SLM evaluations test dialogue ability but overlook speaker identity. Multi-speaker benchmarks check who said what without assessing whether SLMs adapt their responses. Privacy benchmarks focus on globally sensitive data (e.g., bank passwords) while neglecting contextually sensitive information (e.g., a user's private appointment). To address this gap, we introduce <strong>VoxPrivacy</strong>, the first benchmark designed to evaluate interactional privacy in SLMs. VoxPrivacy spans three tiers of increasing difficulty, from following direct secrecy commands to proactively protecting privacy. Our evaluation of nine SLMs on a 32-hour bilingual dataset reveals a widespread vulnerability: most models perform near random chance, about 50% accuracy on binary privacy decisions. Our analysis shows these failures stem from a specific inability to handle conversational context, not a general failure to converse. We also demonstrate a path forward: by fine-tuning on a new 4,000-hour training set, we improve the model's privacy-preserving capabilities while achieving fair robustness. To support future work, we are releasing the VoxPrivacy benchmark, the large-scale training set, and the fine-tuned model to help the development of safer and more context-aware SLMs.
+
+        </div>
+
+
+        <div class="mt-8 mb-8" id="data">
+          <h4 class="text-center">VoxPrivacy-Task</h4>
+          
+          <!-- Task Overview Image -->
+          <div class="flex justify-center mb-8 mt-8">
+            <img src="./bigpic.jpg" alt="VoxPrivacy Task Overview" class="w-full max-w-6xl rounded-lg">
+          </div>
+          
+          <!-- Tier 1 -->
+          <h5 class="text-left">Tier 1: Direct Command Secrecy</h5>
+          <p class="text-p mb-4">
+            This task tests the model's obedience to an explicit command (e.g., <em>"Do not share this with anyone."</em>). The model is expected to uphold this command absolutely, refusing to disclose the information to any subsequent querier, regardless of their identity.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/GIND_en.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">English</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/GIND_zh.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">中文</p>
+            </div>
+          </div>
+
+          <!-- Tier 2 -->
+          <h5 class="text-left">Tier 2: Speaker-Verified Secrecy</h5>
+          <p class="text-p mb-4">
+            This task introduces speaker verification as a condition for disclosure. Given a more nuanced instruction like <em>"Let's keep this between us"</em>, the model must leverage the querier's voice as a biometric key, granting access exclusively to the original speaker while denying all others.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/SVDD_en.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">English</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/SVDD_zh.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">中文</p>
+            </div>
+          </div>
+
+          <!-- Tier 3 -->
+          <h5 class="text-left">Tier 3: Proactive Privacy Protection</h5>
+          <p class="text-p mb-4">
+            The most challenging task evaluates a model's ability to proactively protect user privacy, acting without any explicit instruction. It requires the model to use common-sense understanding to recognize when an utterance is inherently private (e.g., <em>"I'm worried about my upcoming medical results."</em>) based on its content. The model must then automatically enforce a speaker-conditioned access policy, disclosing the information only to the verified owner.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/ASI_en.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">English</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/ASI_zh.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">中文</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8" id="eval">
+          <h4 class="text-center">VoxPrivacy-Data</h4>
+          
+          <!-- Data Pipeline Image -->
+          <div class="flex justify-center mb-8 mt-8">
+            <img src="./data_pipeline.jpg" alt="VoxPrivacy Data Pipeline" class="w-full max-w-6xl rounded-lg">
+          </div>
+
+        </div>
+
+        <div class="mt-8" id="model">
+          <h4>VoxPrivacy-Model</h4>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue
+
+    createApp({
+      setup() {
+        const message = ref('Hello Vue 3!')
+
+        return {
+          message
+        }
+      }
+    }).mount('#app')
+  </script>
+
+</body>
+
+</html>
