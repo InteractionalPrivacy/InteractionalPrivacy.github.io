@@ -70,6 +70,10 @@
         @apply mb-4 font-normal text-gray-900 leading-relaxed;
       }
 
+      .text-abstract {
+        @apply mb-4 font-normal text-gray-900 leading-relaxed text-justify;
+      }
+
       .author {
         @apply font-medium mr-2 pb-1 text-gray-900 inline-block text-base;
       }
@@ -118,13 +122,13 @@
               <a href="#home" class="list-select"><b>Home</b></a>
             </li>
             <li>
-              <a href="#data" class="list-select"><b>SpeechJudge-Data</b></a>
+              <a href="#data" class="list-select"><b>VoxPrivacy-Task</b></a>
             </li>
             <li>
-              <a href="#eval" class="list-select"><b>SpeechJudge-Eval</b></a>
+              <a href="#eval" class="list-select"><b>VoxPrivacy-Data</b></a>
             </li>
             <li>
-              <a href="#grm" class="list-select"><b>SpeechJudge-GRM</b></a>
+              <a href="#model" class="list-select"><b>VoxPrivacy-Eval</b></a>
             </li>
 
           </ul>
@@ -136,6 +140,16 @@
     <div class="p-4 mt-24 max-w-screen-xl mx-auto" id="home">
       <div class="mt-16 mb-8">
         <h1>VoxPrivacy: A Benchmark for Evaluating Interactional Privacy of Speech Language Models</h1>
+        
+        <!-- Hugging Face Badge -->
+        <div class="flex justify-center mt-4">
+          <a href="https://huggingface.co/datasets/ICLR-data/VoxPrivacy" 
+             target="_blank" 
+             class="inline-flex items-center px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors duration-200 shadow-sm">
+            <img src="./huggingface-color.png" alt="Hugging Face" class="w-5 h-5 mr-2">
+            <span>Part of Benchmark Set</span>
+          </a>
+        </div>
       </div>
 
       <div class="max-w-screen-xl mx-auto mt-8 mb-16">
@@ -143,59 +157,100 @@
         </div>
 
         <div class="max-w-[900px] mx-auto mt-8 mb-16">
-          <h2>Abstract</h2>
-          <p class="text-p">
-            Aligning large generative models with human feedback is a critical challenge. In speech synthesis, this is
-            particularly pronounced due to the lack of a large-scale human preference dataset, which hinders the
-            development of models that truly align with human perception. To address this, we introduce SpeechJudge, a
-            comprehensive suite comprising a dataset, a benchmark, and a reward model centered on naturalness—one of the
-            most fundamental subjective metrics for speech synthesis. First, we present SpeechJudge-Data, a large-scale
-            corpus of 99k human preference pairs. The dataset is constructed using a diverse set of advanced
-            text-to-speech (TTS) models across multiple languages and expressive styles, with annotations for both
-            intelligibility and pairwise naturalness preference. From this, we establish SpeechJudge-Eval, a challenging
-            benchmark for automated naturalness judgment. Our evaluation reveals that existing metrics and even
-            state-of-the-art AudioLLMs struggle with this task; the best-performing model, Gemini-2.5-Flash, achieves
-            only about 70% agreement with human preferences, highlighting a significant gap for improvement. To bridge
-            this gap, we develop SpeechJudge-GRM, a generative reward model (GRM) based on Qwen2.5-Omni-7B. It is
-            trained on SpeechJudge-Data via a two-stage post-training process: Supervised Fine-Tuning (SFT) with
-            Chain-of-Thought rationales followed by Reinforcement Learning (RL) on challenging cases. SpeechJudge-GRM
-            demonstrates superior performance, achieving 77.2% accuracy (and 79.4% after inference-time scaling @10) on
-            our benchmark compared to a traditional Bradley-Terry reward model (72.7%). Furthermore, SpeechJudge-GRM can
-            be employed as a reward function during the post-training of speech generation models to effectively enhance
-            their naturalness and quality. We will release all resources from this study to facilitate future research
-            in human-aligned speech synthesis.
+          <h2 class="text-center">Abstract</h2>
+          <p class="text-abstract">
+            As Speech Language Models (SLMs) transition from personal devices to shared, multi-user environments such as smart homes, a new challenge emerges: the model is expected to distinguish between users to manage information flow appropriately. Without this capability, an SLM could reveal one user's confidential schedule to another—a privacy failure we term <strong>interactional privacy</strong>. Thus, the ability to generate speaker-aware responses becomes essential for SLM safe deployment. Current SLM evaluations test dialogue ability but overlook speaker identity. Multi-speaker benchmarks check who said what without assessing whether SLMs adapt their responses. Privacy benchmarks focus on globally sensitive data (e.g., bank passwords) while neglecting contextually sensitive information (e.g., a user's private appointment). To address this gap, we introduce <strong>VoxPrivacy</strong>, the first benchmark designed to evaluate interactional privacy in SLMs. VoxPrivacy spans three tiers of increasing difficulty, from following direct secrecy commands to proactively protecting privacy. Our evaluation of nine SLMs on a 32-hour bilingual dataset reveals a widespread vulnerability: most models perform near random chance, about 50% accuracy on binary privacy decisions. Our analysis shows these failures stem from a specific inability to handle conversational context, not a general failure to converse. We also demonstrate a viable path forward: by fine-tuning on a new 4,000-hour training set, we improve the model's privacy-preserving capabilities while achieving fair robustness. To support future work, we are releasing the VoxPrivacy benchmark, the large-scale training set, and the fine-tuned model to help the development of safer and more context-aware SLMs.
 
         </div>
 
 
         <div class="mt-8 mb-8" id="data">
-          <h4>SpeechJudge-Data</h4>
-          <p>
-            TBD
+          <h4 class="text-center">VoxPrivacy-Task</h4>
+          
+          <!-- Task Overview Image -->
+          <div class="flex justify-center mb-8 mt-8">
+            <img src="./bigpic.jpg" alt="VoxPrivacy Task Overview" class="w-full max-w-6xl rounded-lg">
+          </div>
+          
+          <!-- Tier 1 -->
+          <h5 class="text-left">Tier 1: Direct Command Secrecy</h5>
+          <p class="text-p mb-4">
+            This task tests the model's obedience to an explicit command (e.g., <em>"Do not share this with anyone."</em>). The model is expected to uphold this command absolutely, refusing to disclose the information to any subsequent querier, regardless of their identity.
           </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/GIND_en.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">English</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/GIND_zh.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">中文</p>
+            </div>
+          </div>
 
-          <ul class="list-disc pl-6">
-            <li class="mb-2">
-              <b>L1:</b>
-            </li>
-          </ul>
-
-          <p class="mt-4">
-            {{message}}
-
-            <button @click="message = 'You clicked me!'" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-              Click Me
-            </button>
+          <!-- Tier 2 -->
+          <h5 class="text-left">Tier 2: Speaker-Verified Secrecy</h5>
+          <p class="text-p mb-4">
+            This task introduces speaker verification as a condition for disclosure. Given a more nuanced instruction like <em>"Let's keep this between us"</em>, the model must leverage the querier's voice as a biometric key, granting access exclusively to the original speaker while denying all others.
           </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/SVDD_en.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">English</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/SVDD_zh.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">中文</p>
+            </div>
+          </div>
+
+          <!-- Tier 3 -->
+          <h5 class="text-left">Tier 3: Proactive Privacy Protection</h5>
+          <p class="text-p mb-4">
+            The most challenging task evaluates a model's ability to proactively protect user privacy, acting without any explicit instruction. It requires the model to use common-sense understanding to recognize when an utterance is inherently private (e.g., <em>"I'm worried about my upcoming medical results."</em>) based on its content. The model must then automatically enforce a speaker-conditioned access policy, disclosing the information only to the verified owner.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/ASI_en.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">English</p>
+            </div>
+            <div class="flex flex-col items-center">
+              <video controls class="w-full max-w-md rounded-lg shadow-lg">
+                <source src="./demo/ASI_zh.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <p class="mt-2 text-sm text-gray-600">中文</p>
+            </div>
+          </div>
         </div>
 
         <div class="mt-8" id="eval">
-          <h4>SpeechJudge-Eval</h4>
+          <h4 class="text-center">VoxPrivacy-Data</h4>
+          
+          <!-- Data Pipeline Image -->
+          <div class="flex justify-center mb-8 mt-8">
+            <img src="./data_pipeline.jpg" alt="VoxPrivacy Data Pipeline" class="w-full max-w-6xl rounded-lg">
+          </div>
 
         </div>
 
-        <div class="mt-8" id="grm">
-          <h4>SpeechJudge-GRM</h4>
+        <div class="mt-8" id="model">
+          <h4 class="text-center">VoxPrivacy-Eval</h4>
 
         </div>
       </div>
